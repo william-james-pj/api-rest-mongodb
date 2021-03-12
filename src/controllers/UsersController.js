@@ -5,8 +5,9 @@ const user = mongoose.model('User', UserModels)
 
 class UsersController {
   constructor() {
-    this.createUser = this.createUser.bind(this)
-    this.deleteUser = this.deleteUser.bind(this)
+    this.create = this.create.bind(this)
+    this.delete = this.delete.bind(this)
+    this.update = this.update.bind(this)
   }
 
   async findAll(req, res) {
@@ -22,7 +23,7 @@ class UsersController {
   async findById(id) {
     try {
       let result = await user.findById(id)
-      if (result.length > 0) return { status: true, res: result[0] }
+      if (result.email !== undefined) return { status: true, res: result }
       return { status: false, res: undefined }
     } catch (error) {
       console.log(error)
@@ -42,7 +43,7 @@ class UsersController {
     }
   }
 
-  async createUser(req, res) {
+  async create(req, res) {
     let { name, email, password, role } = req.body
 
     let emailExists = await this.findByEmail(email)
@@ -68,7 +69,41 @@ class UsersController {
     }
   }
 
-  async deleteUser(req, res) {
+  async update(req, res) {
+    let { id, name, email, role } = req.body
+    let editUser = {}
+
+    let usesUpdate = await this.findById(id)
+    if (usesUpdate.res === undefined)
+      return res
+        .status(406)
+        .send({ status: false, res: 'The user does not exist!' })
+
+    if (email !== undefined && email !== usesUpdate.res.email) {
+      let emailExists = await this.findByEmail(email)
+
+      if (!emailExists.res) editUser.email = email
+      else
+        return res
+          .status(406)
+          .send({ status: false, res: 'Email is already registered' })
+    }
+
+    if (name !== undefined) editUser.name = name
+
+    if (role !== undefined) editUser.role = role
+
+    try {
+      await user.findByIdAndUpdate(id, editUser)
+
+      return res.status(200).send({ status: true, res: 'Updated user!' })
+    } catch (error) {
+      console.log(error)
+      return res.status(406).send({ status: false, res: error })
+    }
+  }
+
+  async delete(req, res) {
     let id = req.params.id
 
     let usesDelete = await this.findById(id)
