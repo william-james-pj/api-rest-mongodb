@@ -1,4 +1,6 @@
+const { body, validationResult } = require('express-validator')
 const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
 const UserModels = require('../models/UserModels')
 
 const user = mongoose.model('User', UserModels)
@@ -44,6 +46,10 @@ class UsersController {
   }
 
   async create(req, res) {
+    let erros = validationResult(req).formatWith(({ msg }) => msg)
+    if (!erros.isEmpty())
+      return res.status(400).send({ status: false, res: erros.array() })
+
     let { name, email, password, role } = req.body
 
     let emailExists = await this.findByEmail(email)
@@ -53,10 +59,12 @@ class UsersController {
         .status(406)
         .send({ status: false, res: 'The email is already registered!' })
 
+    let hash = await bcrypt.hash(password, 10)
+
     let newUser = new user({
       name,
       email,
-      password,
+      password: hash,
       role,
     })
 
@@ -119,6 +127,25 @@ class UsersController {
     } catch (error) {
       console.log(error)
       return res.status(406).send({ status: false, res: error })
+    }
+  }
+
+  validate(method) {
+    switch (method) {
+      case 'createUser': {
+        return [
+          body('name').exists().withMessage("Name doesn't exists"),
+          body('email').exists().isEmail().withMessage('Invalid email'),
+          body('password')
+            .exists()
+            .isLength({ min: 4 })
+            .withMessage('Invalid password'),
+          body('role')
+            .optional()
+            .isInt({ min: 0, max: 5 })
+            .withMessage('Invalid role'),
+        ]
+      }
     }
   }
 }
