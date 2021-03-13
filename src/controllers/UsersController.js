@@ -1,9 +1,10 @@
+require('dotenv').config()
 const { body, validationResult } = require('express-validator')
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-const UserModels = require('../models/UserModels')
 
+const UserModels = require('../models/UserModels')
 const user = mongoose.model('User', UserModels)
 
 class UsersController {
@@ -11,6 +12,7 @@ class UsersController {
     this.create = this.create.bind(this)
     this.delete = this.delete.bind(this)
     this.update = this.update.bind(this)
+    this.login = this.login.bind(this)
   }
 
   async findAll(req, res) {
@@ -129,6 +131,22 @@ class UsersController {
       console.log(error)
       return res.status(406).send({ status: false, res: error })
     }
+  }
+
+  async login(req, res) {
+    let { email, password } = req.body
+
+    let user = await this.findByEmail(email)
+    if (user === undefined)
+      return res.status(406).send({ status: false, res: 'Invalid email' })
+
+    let result = await bcrypt.compare(password, user.res.password)
+    if (!result)
+      return res.status(406).send({ status: false, res: 'Invalid password' })
+
+    var token = jwt.sign({ email, role: user.res.role }, process.env.SECRET)
+
+    return res.status(200).send({ status: true, res: token })
   }
 
   validate(method) {
