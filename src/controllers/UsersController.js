@@ -1,5 +1,6 @@
 const { body, validationResult } = require('express-validator')
 const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const UserModels = require('../models/UserModels')
 
@@ -132,7 +133,7 @@ class UsersController {
 
   validate(method) {
     switch (method) {
-      case 'createUser': {
+      case 'create': {
         return [
           body('name').exists().withMessage("Name doesn't exists"),
           body('email').exists().isEmail().withMessage('Invalid email'),
@@ -142,7 +143,7 @@ class UsersController {
             .withMessage('Invalid password'),
           body('role')
             .optional()
-            .isInt({ min: 0, max: 5 })
+            .isInt({ min: 0, max: 3 })
             .withMessage('Invalid role'),
         ]
       }
