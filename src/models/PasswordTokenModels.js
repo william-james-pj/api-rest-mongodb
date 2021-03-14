@@ -4,7 +4,7 @@ const PasswordTokenDB = require('../database/PasswordTokenDB')
 const passwordModels = mongoose.model('PasswordToken', PasswordTokenDB)
 
 class PasswordToken {
-  async createToken(email, user) {
+  async createToken(user) {
     if (user.res === undefined)
       return { status: false, res: 'The email does not exist!' }
 

@@ -69,7 +69,7 @@ class UsersController {
     let email = req.body.email
     let user = await UserModels.findByEmail(email)
 
-    let result = await PasswordTokenModels.createToken(email, user)
+    let result = await PasswordTokenModels.createToken(user)
 
     if (result.res === undefined)
       res.status(406).send({ status: false, res: result.res })
