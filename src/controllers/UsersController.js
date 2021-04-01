@@ -38,7 +38,11 @@ class UsersController {
   }
 
   async deleteUser(req, res) {
-    let id = req.params.id
+    let id = req.body.id
+
+    if (id === undefined)
+      return res.status(406).send({ status: false, res: 'Invalid user!' })
+
     let result = await UserModels.delete(id)
 
     if (result.status === false)

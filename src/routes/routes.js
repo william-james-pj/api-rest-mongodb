@@ -6,16 +6,23 @@ const TokenAuth = require('../middleware/TokenAuth')
 
 const ValidateController = require('../controllers/ValidateController')
 const UsersController = require('../controllers/UsersController')
+const AppointmentsController = require('../controllers/AppointmentsController')
 
 router.get('/user', AdminAuth, UsersController.findAllUser)
 router.get('/user/:id', AdminAuth, UsersController.findUserId)
-router.delete('/user/:id', AdminAuth, UsersController.deleteUser)
+router.delete('/user', AdminAuth, UsersController.deleteUser)
 router.put('/user', AdminAuth, UsersController.updateUser)
 router.post(
   '/user',
   UsersController.validate('create'),
   UsersController.createUser
 )
+
+router.get('/user', AdminAuth, AppointmentsController.findAll)
+router.get('/user/:id', AdminAuth, AppointmentsController.findNotFinished)
+// router.delete('/user/:id', AdminAuth, UsersController.deleteUser)
+// router.put('/user', AdminAuth, UsersController.updateUser)
+router.post('/user', AppointmentsController.create)
 
 router.post('/login', UsersController.login)
 
