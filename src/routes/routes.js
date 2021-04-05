@@ -18,11 +18,8 @@ router.post(
   UsersController.createUser
 )
 
-router.get('/user', AdminAuth, AppointmentsController.findAll)
-router.get('/user/:id', AdminAuth, AppointmentsController.findNotFinished)
-// router.delete('/user/:id', AdminAuth, UsersController.deleteUser)
-// router.put('/user', AdminAuth, UsersController.updateUser)
-router.post('/user', AppointmentsController.create)
+router.get('/appointment/:date', AdminAuth, AppointmentsController.findByDate)
+router.post('/appointment', AdminAuth, AppointmentsController.create)
 
 router.post('/login', UsersController.login)
 

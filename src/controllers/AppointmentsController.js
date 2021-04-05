@@ -1,24 +1,24 @@
 const AppointmentModels = require('../models/AppointmentModel')
 
 class AppointmentsController {
-  async findAll(req, res) {
-    let appointments = await AppointmentModels.findAll()
+  async findByDate(req, res) {
+    let app = await AppointmentModels.findByDate(req.params.date)
 
-    return res.status(200).send({ status: true, res: appointments.res })
-  }
-
-  async findNotFinished(req, res) {
-    let appointments = await AppointmentModels.findNotFinished()
-
-    return res.status(200).send({ status: true, res: appointments.res })
+    return res.status(200).send({ status: true, res: app.res })
   }
 
   async create(req, res) {
-    let { name, cpf, telefone, description, date, time } = req.body
+    let { clientId, description, date, timeStart, timeEnd } = req.body
 
-    await AppointmentModels.create(name, cpf, telefone, description, date, time)
+    await AppointmentModels.create(
+      clientId,
+      description,
+      date,
+      timeStart,
+      timeEnd
+    )
 
-    return res.status(200).send({ status: true, res: 'Create user!' })
+    return res.status(200).send({ status: true, res: 'Create event!' })
   }
 }
 

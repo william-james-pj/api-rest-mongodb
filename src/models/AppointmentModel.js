@@ -1,53 +1,28 @@
 const mongoose = require('mongoose')
 
-const AppointmentFactorie = require('../factories/AppointmentsFactorie')
 const AppointmentDB = require('../database/AppointmentDB')
 const Appointment = mongoose.model('Appointment', AppointmentDB)
 
 class AppointmentModel {
-  async findAll() {
+  async findByDate(date) {
     try {
-      let result = await Appointment.find({})
-      let appointmests = []
+      let result = await Appointment.find({ date })
 
-      result.forEach((appointment) => {
-        if (appointment.date != undefined)
-          appointmests.push(AppointmentFactorie.Build(appointment))
-      })
-
-      return { status: true, res: appointmests }
+      return { status: true, res: result }
     } catch (error) {
       console.log(error)
       return { status: false, res: [] }
     }
   }
 
-  async findNotFinished() {
-    try {
-      let result = await Appointment.find({ finished: false })
-      let appointmests = []
-
-      result.forEach((appointment) => {
-        if (appointment.date != undefined)
-          appointmests.push(AppointmentFactorie.Build(appointment))
-      })
-
-      return { status: true, res: appointmests }
-    } catch (error) {
-      console.log(error)
-      return { status: false, res: [] }
-    }
-  }
-
-  async create(name, cpf, telefone, description, date, time) {
+  async create(clientId, description, date, timeStart, timeEnd) {
     try {
       let newAppointment = new Appointment({
-        name,
-        cpf,
-        telefone,
+        clientId,
         description,
         date,
-        time,
+        timeStart,
+        timeEnd,
         finished: false,
       })
 

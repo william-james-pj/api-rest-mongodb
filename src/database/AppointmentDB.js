@@ -1,12 +1,11 @@
 const mongoose = require('mongoose')
 
 const AppointmentDB = new mongoose.Schema({
-  name: { type: String, required: true },
-  cpf: { type: String, required: true },
-  telefone: { type: String, required: true },
-  description: { type: String, required: false },
+  clientId: { type: String, required: true },
+  description: { type: String, required: true },
   date: { type: Date, required: true },
-  time: { type: String, required: true },
+  timeStart: { type: String, required: true },
+  timeEnd: { type: String, required: true },
   finished: { type: Boolean, required: true },
 })
 
