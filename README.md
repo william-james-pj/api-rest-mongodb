@@ -4,7 +4,7 @@
   <h3 align="center">API REST MongoDB</h3>
 
   <p align="center">
-    API REST de registro do usuário
+    API REST para o sistema de agendamento
   </p>
 
 </p>
@@ -32,7 +32,7 @@
 
 ## Sobre o projeto
 
-Essa API é capaz de altera, criar, editar e deletar um usuário. Também possuindo um controle de acesso, onde só o usuário admin pode realizar algumas funções. Essa API valida os dados de cadastro e possui um sistema de redefinição de senha.
+Essa API foi elaborada para o projeto do [sistema de agendamento](https://github.com/william-james-pj/schedule) e é capaz de altera, criar, editar e deletar um usuários e clientes. Também possuindo um controle de acesso, onde só o usuário admin pode realizar algumas funções. Essa API valida os dados de cadastro e possui um sistema de redefinição de senha.
 
 ### Construído com
 
