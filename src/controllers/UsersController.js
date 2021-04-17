@@ -110,7 +110,9 @@ class UsersController {
 
     var token = jwt.sign({ email, role: user.res.role }, process.env.SECRET)
 
-    return res.status(200).send({ status: true, res: token })
+    return res
+      .status(200)
+      .send({ status: true, res: { token, id: user.res._id } })
   }
 
   validate(method) {
